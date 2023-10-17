@@ -1,0 +1,121 @@
+/*
+nchar => any langue
+nvarchar => to save memory
+auto increment when use delete to data it increment into last value not start from 1
+*/
+
+create database hr ;
+use hr ;
+
+show  databases  ;
+show tables ;
+
+create table Employees (
+    emp_code int primary key  check ( emp_code > 0 ),
+     emp_name nvarchar(30) not null unique ,
+     birth_day date not null ,
+     start_job date not null ,
+     salary float default 15000 ,
+     age int null ,
+     sex bool default 1 ,
+     dept_code nvarchar(30) null  ,
+    -- FOREIGN KEY (dept_code) REFERENCES department (dep_code) to link tables ,
+     constraint check_date check ( birth_day < start_job )
+                      ) ;
+
+create table department(
+    dep_code nvarchar(30) primary key not null  ,
+    dep_name nvarchar(30)   not null unique  ,
+    deb_phone nvarchar(30)  null ,
+    address nvarchar(30) null
+            ) ;
+
+create table custmer (
+    code int primary key  auto_increment,   -- gave prime key to data automatic
+     name nvarchar(30) ,
+     phone nvarchar(30)
+) ;
+truncate table custmer ; -- to start from one with auto increment faster than delete and solve bug (in realtion use delete )
+
+drop table Employees ;
+drop table department ;
+drop table custmer ;
+
+alter table Employees add constraint FK foreign key (dept_code) references department (dep_code) ; -- link tables
+alter table Employees add column end_job date ;
+alter table Employees add end_job date ;
+
+
+/*alter table employee alter column emp_name nvarchar (40) ; change data type in mssql*/
+alter table Employees modify column emp_name nvarchar(40) ;
+
+
+
+alter table Employees drop column end_job ;
+alter table Employees drop end_job ;  /*as same as */
+
+/*select DATE_FORMAT(STR_TO_DATE(birth_date,'%d.%m.%Y'), '%Y-%m-%d') as DateFormat from employee ;
+select DATE_FORMAT(STR_TO_DATE(end_job ,'%d.%m.%Y'), '%Y-%m-%d') as DateFormat from employee ;
+select str_to_date(birth_date,'%Y.%m.%d') as DateFormat from employee;
+select str_to_date(end_job,'%Y.%m.%d') as DateFormat from employee;
+  */
+
+
+/*/\//\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\\/\/\\\/\/\\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/*/
+
+select *from department ;
+select *from Employees ;
+select *from custmer ;
+
+select emp_code , emp_name  , salary   from Employees ;
+select emp_code , emp_name , salary , salary * 1.1 from Employees ;
+select emp_code , emp_name , salary , salary * 1.1  as alias from Employees ; -- alias don't found in my database
+select emp_code  as Code , emp_name , salary , salary * 1.1  as alias from Employees ; -- chang name
+
+select emp_code , emp_name , case when sex = 1  then 'male' else  'female' end  as Gender from Employees ;
+select emp_code , emp_name  , salary   from Employees  limit  3 ; -- choice want to show it
+select distinct dept_code from Employees ;  -- reject duplicate in show 
+
+/*/\//\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\\/\/\\\/\/\\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/*/
+
+describe department ;
+describe Employees ;
+describe custmer ;
+
+/*/\//\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\\/\/\\\/\/\\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/*/
+
+insert into Employees values (1,'Mohamed Matter' , '1960/9/9' , '2002/1/1' , 30000 , 63 , 1 , 'Eng') ;
+insert into Employees values (2,'Nasra abdelmeged' , '1971/3/21' , '2002/1/1' , 29000 , 52 , 0 , 'Mom') ;
+insert into Employees values (3,'Ahmed Mohamed Matter' , '2003/6/2' , '2025/1/1' , 28000 , 20 , 1 , 'CS Eng') ;
+insert into Employees values (4,'Mona Mohamed Matter' , '2005/7/3' , '2028/1/1' , 27000 , 18 , 0 , 'Eng') ;
+insert into Employees values (5,'Youssef Mohamed Matter' , '2008/1/12' , '2030/1/1' , 26000 , 15 , 1 , 'St') ;
+insert into Employees values (6,'Mervet Mohamed Matter' , '2013/10/12', '2035/1/1' , 25000 , 10  , 0 , 'St') ;
+
+
+insert into department values ('Eng', 'Enginerring' , '01065422740' , 'Menof') ;
+insert into department values ('Mom', 'Home' , '0483652944', 'Menof') ;
+insert into department values('St','school' , '01238765070' , 'Menof') ;
+insert into department values('CS Eng' , 'college computer' , '01025558989' , 'Menof') ;
+
+insert into department (dep_code, dep_name ) values (5,'cs') ;
+insert into department (dep_code, dep_name ) values (6,'is') ;
+insert into department (dep_code, dep_name ) values (7,'it') ;
+
+insert into custmer ( name, phone) values  ('heper' , '0483657898' ) ;
+insert into custmer  ( name, phone)  values  ('heper1' , '0444567812' ) ;
+insert into custmer ( name, phone)  values  ('heper2' , '048257375008' ) ;
+
+-- update Employees set dept_code = 'cs'   ; /*update all data */
+update Employees set salary = salary * 1.1 ;
+
+update department set  dep_name = 'Engineering' where  dep_code = 1 ;
+update department set  dep_name = 'My Home' where  dep_code = 2 ;
+
+
+-- delete from department  ;  /*delete all data */
+-- delete from Employees ;
+
+delete from custmer ;
+delete from department where dep_code = 3 ;
+
+/*/\//\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\\/\/\\\/\/\\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/*/
