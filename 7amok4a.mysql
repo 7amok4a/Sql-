@@ -31,10 +31,11 @@ create table department(
             ) ;
 
 create table custmer (
-    code int primary key  auto_increment,   -- gave prime key to data automatic
+    code int auto_increment  primary key ,   -- gave prime key to data automatic identity x`
      name nvarchar(30) ,
      phone nvarchar(30)
 ) ;
+
 truncate table custmer ; -- to start from one with auto increment faster than delete and solve bug (in realtion use delete )
 
 drop table Employees ;
@@ -74,7 +75,44 @@ select emp_code  as Code , emp_name , salary , salary * 1.1  as alias from Emplo
 
 select emp_code , emp_name , case when sex = 1  then 'male' else  'female' end  as Gender from Employees ;
 select emp_code , emp_name  , salary   from Employees  limit  3 ; -- choice want to show it
-select distinct dept_code from Employees ;  -- reject duplicate in show 
+select distinct dept_code from Employees ;  -- reject duplicate in show
+
+-- filter
+select *from Employees where sex = 1  and dept_code = 'Eng';
+select *from Employees  where sex = 1  or dept_code = 'Eng';
+select *from Employees where not (sex = 1) ;
+select *from Employees where salary >= 25000 and salary <= 28000 ;
+select *from Employees where salary between 25000 and 28000  ; -- as same as
+select *from Employees where salary is null  ;
+select *from Employees where salary is not null  ;
+select *from Employees where emp_name like  '%Mohamed%' ;
+select *from Employees where emp_name like  'Mohamed%' ;
+select *from Employees where emp_name like  '%Mohamed' ;
+select *from Employees where dept_code in ('Eng' , 'CS Eng') ;
+
+-- sort
+select *from Employees order by emp_name  ; -- تصاعدي
+select *from Employees order by emp_name  desc ; -- تنازلي
+select *from Employees order by 3 ;  -- رتب  حسب الحقل  التالت
+select *from Employees order by 3  desc ;
+
+-- order of operator in this type is important
+select sum(salary)  as total_salary from Employees ;
+select dept_code , sum(salary) as total_salary from Employees group by dept_code  order by total_salary;
+select dept_code , sum(salary) as total_salary from Employees group by dept_code  order by total_salary desc ;
+select dept_code , sum(salary) as total_salary from Employees group by dept_code having  sum(salary) > 25000 ;
+
+
+-- subquray
+select max(salary) from Employees ; -- sub
+select *from Employees where salary = (select max(salary) from Employees ) ;
+select *from Employees where salary < (select avg(salary) from Employees ) ;
+select dept_code , avg(salary) from Employees group by dept_code ;
+select *from Employees where salary < all (select avg(salary) from Employees group by dept_code ) ;
+select *from Employees where salary < any (select avg(salary) from Employees group by dept_code ) ;
+
+-- joins
+
 
 /*/\//\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\\/\/\\\/\/\\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/*/
 
@@ -99,7 +137,7 @@ insert into department values('CS Eng' , 'college computer' , '01025558989' , 'M
 
 insert into department (dep_code, dep_name ) values (5,'cs') ;
 insert into department (dep_code, dep_name ) values (6,'is') ;
-insert into department (dep_code, dep_name ) values (7,'it') ;
+insert into department (dep_code,   dep_name ) values (7,'it') ;
 
 insert into custmer ( name, phone) values  ('heper' , '0483657898' ) ;
 insert into custmer  ( name, phone)  values  ('heper1' , '0444567812' ) ;
